@@ -1,7 +1,8 @@
 use rodio::{source::Source, Decoder, OutputStream};
-use std::fs::File;
+use std::fs::*;
 use std::io::BufReader;
-pub fn play_audio(path: &str ) {
+use std::path::Path;
+pub fn play_audio(path: &str) {
     println!("{path}");
     // Get a output stream handle to the default physical sound device
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
@@ -15,4 +16,11 @@ pub fn play_audio(path: &str ) {
     // The sound plays in a separate audio thread,
     // so we need to keep the main thread alive while it's playing.
     std::thread::sleep(std::time::Duration::from_secs(5000));
+}
+pub fn display_all_files(path: &Path) {
+    let paths = read_dir("~/Code/rust/rusty_music/yeet/").unwrap();
+
+    for path in paths {
+        println!("Name: {}", path.unwrap().path().display())
+    }
 }
