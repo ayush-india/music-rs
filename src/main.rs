@@ -7,6 +7,6 @@ fn main() {
     stdin().read_line(&mut file_path).unwrap();
 
     // rusty_music::play_audio(&file_path.trim());
-    rusty_music::display_all_files(&Path::new(&file_path));
+    rusty_music::display_all_files(&Path::new(&file_path.trim()));
 
 }

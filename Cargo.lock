@@ -1227,6 +1227,7 @@ dependencies = [
  "mp3-duration",
  "notify-rust",
  "rodio",
+ "walkdir",
 ]
 
 [[package]]

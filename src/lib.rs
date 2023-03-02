@@ -1,7 +1,7 @@
 use rodio::{source::Source, Decoder, OutputStream};
 use std::fs::*;
 use std::io::BufReader;
-use std::path::Path;
+use std::path::*;
 pub fn play_audio(path: &str) {
     println!("{path}");
     // Get a output stream handle to the default physical sound device
@@ -18,8 +18,8 @@ pub fn play_audio(path: &str) {
     std::thread::sleep(std::time::Duration::from_secs(5000));
 }
 pub fn display_all_files(path: &Path) {
-    let paths = read_dir("~/Code/rust/rusty_music/yeet/").unwrap();
-
+    let paths = read_dir(path).unwrap();
+    // TODO: get that puppy recursice and get it to display all files adn fodlers
     for path in paths {
         println!("Name: {}", path.unwrap().path().display())
     }
