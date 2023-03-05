@@ -1,4 +1,4 @@
-  play mp3
+  done play mp3
 
   only play mp3 for the length of the mp3 
 

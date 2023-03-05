@@ -1,3 +1,5 @@
+use music_player::*;
+use std::path::*;
 fn main() {
-    println!("Hello, world!");
+    play_audio(Path::new("yeet/2055.mp3"));
 }
