@@ -14,7 +14,7 @@ pub fn iter_dirs(path: &PathBuf) -> Vec<PathBuf> {
         }
         paths.push(path);
     }
-    return paths;
+    paths
 }
 pub fn play_audio(path: &PathBuf) {
     // Get a output stream handle to the default physical sound device
