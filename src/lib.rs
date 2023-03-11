@@ -10,7 +10,8 @@ pub fn iter_dirs(path: &PathBuf) -> Vec<PathBuf> {
         let entry = entry.unwrap();
         let path = entry.path();
         if path.is_dir() {
-            iter_dirs(&path);
+            // TODO: Add nested dirs feature
+            unimplemented!("Error: Nested dirs in not implemeted yet!");
         }
         paths.push(path);
     }
