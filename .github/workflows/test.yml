@@ -26,12 +26,12 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-          components: rustfmt, clippy
+         
 
       - name: Install developer package dependencies
         run: sudo apt-get update && sudo apt-get install libasound2-dev
-        # run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev
-        # run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev gstreamer-player-1
+        run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev
+        run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev gstreamer-player-1
       - uses: Swatinem/rust-cache@v1
 
       - name: Run cargo check
@@ -85,7 +85,7 @@ jobs:
 
       - name: Install developer package dependencies
         if: matrix.build == 'x86_64-linux'
-        run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev
+        run: sudo apt-get update && sudo apt-get install libpulse-dev portaudio19-dev libasound2-dev libsdl2-dev gstreamer1.0-dev libgstreamer-plugins-base1.0-dev libavahi-compat-libdnssd-dev libgstreamer-plugins-bad1.0-dev gstreamer-player-1
   
       - name: Run cargo test
         uses: actions-rs/cargo@v1
@@ -100,8 +100,7 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --features mpris,cover,discord --release --locked --target ${{ matrix.target }}
-          # args: --release --locked --target ${{ matrix.target }}
+         
 
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'x86_64-linux'
