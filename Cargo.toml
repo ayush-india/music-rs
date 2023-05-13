@@ -1,5 +1,5 @@
 [package]
-name = "music_player"
+name = "music-rs"
 version = "0.1.0"
 edition = "2021"
 
