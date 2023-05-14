@@ -2,7 +2,7 @@ name: test
 
 env:
   CARGO_TERM_COLOR: always
-  BIN_NAME: music-rs
+  BIN_NAME: player
   PROJECT_NAME: music.rs
   REPO_NAME: ayush-india/music.rs
 

@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "music-rs"
+name = "player"
 version = "0.1.0"
