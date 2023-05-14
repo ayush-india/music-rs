@@ -8,7 +8,8 @@ env:
   BIN_NAME: player
   PROJECT_NAME: music.rs
   REPO_NAME: ayush-india/music.rs
-
+permissions:
+  actions: write
 jobs:
   dist:
     name: Dist
