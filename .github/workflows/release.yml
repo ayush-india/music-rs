@@ -74,6 +74,8 @@ jobs:
           fi
 
       - uses: actions/upload-artifact@v2.2.4
+        permissions:
+          actions: write
         with:
           name: bins-${{ matrix.build }}
           path: dist
