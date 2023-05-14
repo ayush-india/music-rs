@@ -60,7 +60,7 @@ jobs:
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'x86_64-linux'
           #run: strip "target/${{ matrix.target }}/release/$BIN_NAME"
-        run: ls target/x86_64-unknown-linux-gnu/release/
+        run: tree target/x86_64-unknown-linux-gnu/release/
 
       - name: Build archive
         shell: bash
