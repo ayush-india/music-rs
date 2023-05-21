@@ -62,6 +62,9 @@ jobs:
       - name: print dir
         shell: bash
         run: tree .
+      - name: strip
+        shell: bash
+        run: strip "bin/${{ matrix.target }}-$BIN_NAME"
 
       - name: Upload binary as artifact
         uses: actions/upload-artifact@v2.2.4
