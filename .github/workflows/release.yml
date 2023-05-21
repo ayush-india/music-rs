@@ -6,10 +6,9 @@ on:
 env:
   CARGO_TERM_COLOR: always
   BIN_NAME: player
-  PROJECT_NAME: music.rs
-  REPO_NAME: ayush-india/music.rs
-permissions:
-  actions: write
+  PROJECT_NAME: music-rs
+  REPO_NAME: ayush-india/music-rs
+
 jobs:
   dist:
     name: Dist
@@ -48,7 +47,6 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: test
-          if: matrix.build == 'x86_64-linux' 
           args: --release --locked --target ${{ matrix.target }}
 
       - name: Build release binary
@@ -58,30 +56,21 @@ jobs:
           command: build
           args: --release --locked --target ${{ matrix.target }}
 
-      - name: Strip release binary (linux and macos)
-        if: matrix.build == 'x86_64-linux'
-          #run: strip "target/${{ matrix.target }}/release/$BIN_NAME"
-        run: tree target/x86_64-unknown-linux-gnu/release/
-
-      - name: Build archive
+      - name: Rename release binary
         shell: bash
-        run: |
-          mkdir dist
-          if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            cp "target/${{ matrix.target }}/release/$BIN_NAME.exe" "dist/"
-          else
-            cp "target/${{ matrix.target }}/release/$BIN_NAME" "dist/"
-          fi
+        run: mv target/${{ matrix.target }}/release/$BIN_NAME target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }}
 
-      - uses: actions/upload-artifact@v2.2.4
+      - name: Upload binary as artifact
+        uses: actions/upload-artifact@v2.2.4
         with:
-          name: bins-${{ matrix.build }}
-          path: dist
+          name: binaries
+          path: target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }}
 
   publish:
     name: Publish
     needs: [dist]
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -89,59 +78,23 @@ jobs:
           submodules: false
 
       - uses: actions/download-artifact@v2
-        # with:
-        #   path: dist
-      # - run: ls -al ./dist
-      - run: ls -al bins-*
-
-      - name: Calculate tag name
-        run: |
-          name=dev
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            name=${GITHUB_REF:10}
-          fi
-          echo ::set-output name=val::$name
-          echo TAG=$name >> $GITHUB_ENV
-        id: tagname
-
-      - name: Build archive
-        shell: bash
-        run: |
-          set -ex
-
-          rm -rf tmp
-          mkdir tmp
-          mkdir dist
-
-          for dir in bins-* ; do
-              platform=${dir#"bins-"}
-              if [[ $platform =~ "windows" ]]; then
-                  exe=".exe"
-              fi
-              pkgname=$PROJECT_NAME-$TAG-$platform
-              mkdir tmp/$pkgname
-              # cp LICENSE README.md tmp/$pkgname
-              mv bins-$platform/$BIN_NAME$exe tmp/$pkgname
-              chmod +x tmp/$pkgname/$BIN_NAME$exe
-
-              if [ "$exe" = "" ]; then
-                  tar cJf dist/$pkgname.tar.xz -C tmp $pkgname
-              else
-                  (cd tmp && 7z a -r ../dist/$pkgname.zip $pkgname)
-              fi
-          done
-
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/*
-          file_glob: true
-          tag: ${{ steps.tagname.outputs.val }}
-          overwrite: true
+          path: binaries
 
-      - name: Extract version
-        id: extract-version
-        run: |
-          printf "::set-output name=%s::%s\n" tag-name "${GITHUB_REF#refs/tags/}"
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          allowUpdates: true
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          artifacts: "binaries/binaries/*"
+          artifactErrorsFailBuild: true
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
