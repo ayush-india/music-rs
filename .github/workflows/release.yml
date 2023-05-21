@@ -58,13 +58,16 @@ jobs:
 
       - name: Rename release binary
         shell: bash
-        run: mv target/${{ matrix.target }}/release/$BIN_NAME target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }} && tree .
+        run: mkdir bin && mv target/${{ matrix.target }}/release/$BIN_NAME bin/${{ matrix.target }}-$BIN_NAME
+      - name: print dir
+        shell: bash
+        run: tree .
 
       - name: Upload binary as artifact
         uses: actions/upload-artifact@v2.2.4
         with:
           name: binaries
-          path: target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }}
+          path: bin/
 
   publish:
     name: Publish
@@ -87,13 +90,17 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: print dir
+        shell: bash
+        run: tree .
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           draft: true
           allowUpdates: true
           tag: ${{ steps.tag_version.outputs.new_tag }}
-          artifacts: "binaries/binaries/*"
+          artifacts: "binaries/bin/*"
           artifactErrorsFailBuild: true
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
