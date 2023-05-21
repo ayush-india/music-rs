@@ -58,7 +58,7 @@ jobs:
 
       - name: Rename release binary
         shell: bash
-        run: mv target/${{ matrix.target }}/release/$BIN_NAME target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }}
+        run: mv target/${{ matrix.target }}/release/$BIN_NAME target/${{ matrix.target }}/release/$BIN_NAME-${{ matrix.target }} && tree .
 
       - name: Upload binary as artifact
         uses: actions/upload-artifact@v2.2.4
