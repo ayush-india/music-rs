@@ -1,4 +1,5 @@
+use cmd_lib::*;
 fn main() {
-    println!("Got back");
-    println!("Hello tui how are u");
+    run_cmd!(mkdir pit);
+
 }
