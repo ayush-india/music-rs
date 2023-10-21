@@ -12,3 +12,11 @@ pub fn progress(duration: i16) {
         elapsed += 1;
     }
 }
+
+pub fn error() {
+    eprintln!("Error: Please give at least one argument");
+    std::process::exit(0); // I want the program to terminate if any error occures
+}
+// pub fn list_audio_files() -> Vec
+
+// TODO: get the audio file (or dir) from the args , to play it
