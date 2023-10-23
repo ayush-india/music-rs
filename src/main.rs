@@ -7,7 +7,7 @@ use std::path::*;
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    // this will fail if no args are given its on pourpose
+    // this will fail if no args are provided, Its on pourpose
     if Path::new(args.get(1).unwrap()).is_dir() {
         println!("dis is {}", args[1])
     } else {
