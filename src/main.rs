@@ -2,17 +2,15 @@ pub mod music_handler;
 pub mod useful_funs;
 
 use std::env;
-use std::path::*;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    // this will fail if no args are provided, Its on pourpose
-    if Path::new(args.get(1).unwrap()).is_dir() {
-        println!("dis is {}", args[1])
+    if  args.get(1).is_some() {
+        let files = useful_funs::list_audio_files(&Some(args[1].to_owned()));
+        println!("{:?}", files);
     } else {
-        println!("file {}", args[1])
+        let files = useful_funs::list_audio_files(&None);
+        println!("{:?}", files);
     }
-
-    // TODO: get the audio file (or dir) from the args , to play it
 }
