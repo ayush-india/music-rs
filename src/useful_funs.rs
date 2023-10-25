@@ -1,4 +1,5 @@
 use glob::{glob_with, MatchOptions};
+use std::path::PathBuf;
 use std::process::Command;
 use std::{
     env,
@@ -24,7 +25,7 @@ pub fn error() {
     std::process::exit(0); // I want the program to terminate if any error occures
 }
 
-pub fn list_audio_files(path: &Option<String>) -> Vec<String> {
+pub fn list_audio_files(path: &Option<String>) -> Vec<PathBuf> {
     let mut items = Vec::new();
     let options = MatchOptions {
         case_sensitive: false,
@@ -46,8 +47,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<String> {
             let current_dir = Path::new(path.as_ref().unwrap());
             let join = Path::join(&current_dir, Path::new(&item));
             let ext = Path::new(&item).extension().and_then(OsStr::to_str);
-            // if folder  (Hide Private) enter, else play song
-            if (join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
+            if (!join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
                 || (ext.is_some()
                     && (item.extension().unwrap() == "mp3"
                         || item.extension().unwrap() == "mp4"
@@ -57,7 +57,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<String> {
                         || item.extension().unwrap() == "ogg"
                         || item.extension().unwrap() == "aac"))
             {
-                items.push(item.to_str().unwrap().to_owned());
+                items.push(item);
             }
         }
         items
@@ -70,8 +70,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<String> {
             let join = Path::join(&path, Path::new(&item));
             let ext = Path::new(&item).extension().and_then(OsStr::to_str);
 
-            // if folder  (Hide Private) enter, else play song
-            if (join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
+            if (!join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
                 || (ext.is_some()
                     && (item.extension().unwrap() == "mp3"
                         || item.extension().unwrap() == "mp4"
@@ -81,7 +80,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<String> {
                         || item.extension().unwrap() == "ogg"
                         || item.extension().unwrap() == "aac"))
             {
-                items.push(item.to_str().unwrap().to_owned());
+                items.push(item);
             }
         }
         items
