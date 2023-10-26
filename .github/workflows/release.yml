@@ -1,8 +1,11 @@
 name: Release
+# edit this to only work when a tag is released ;? https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-including-branches-and-tags
 on:
-   push:
-      tags:
-        - *
+  push:
+    branches: "master"
+  pull_request:
+    branches: "master"
+
 env:
   CARGO_TERM_COLOR: always
   BIN_NAME: player
