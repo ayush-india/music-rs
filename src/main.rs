@@ -5,7 +5,6 @@ use console::{Key, Term};
 use std::env;
 
 use music_handler::MusicHandle;
-use std::{thread, time};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
