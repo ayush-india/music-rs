@@ -1,14 +1,16 @@
 use lofty::{AudioFile, Probe};
-use rodio::{Decoder, OutputStream, Sink, Source};
+use rodio::{Decoder, OutputStream, OutputStreamHandle, Sink, Source};
 use std::{
     fs::File,
     io::BufReader,
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
+    thread,
 };
 
 pub struct MusicHandle {
     sink: Arc<Sink>,
+    music_output: Arc<(OutputStream, OutputStreamHandle)>,
     song_length: u64,
     time_played: Arc<Mutex<u16>>,
     currently_playing: String,
@@ -24,9 +26,18 @@ impl MusicHandle {
     pub fn new() -> Self {
         Self {
             sink: Arc::new(Sink::new_idle().0),
+            music_output: Arc::new(OutputStream::try_default().unwrap()),
             song_length: 0,
             time_played: Arc::new(Mutex::new(0)),
             currently_playing: "CURRENT SONG".to_string(),
+        }
+    }
+
+    pub fn play_pause(&mut self) {
+        if self.sink.is_paused() {
+            self.sink.play()
+        } else {
+            self.sink.pause()
         }
     }
 
@@ -56,18 +67,23 @@ impl MusicHandle {
             .to_str()
             .unwrap()
             .to_string();
-        // Get a output stream handle to the default physical sound device
-        let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-        // Load a sound from a file, using a path relative to Cargo.toml
-        let file = BufReader::new(File::open(path).unwrap());
-        // Decode that sound file into a source
-        let source = Decoder::new(file).unwrap();
-        // Play the sound directly on the device
-        let _ = stream_handle.play_raw(source.convert_samples());
+        // reinitialize due to rodio crate
+        self.sink = Arc::new(Sink::try_new(&self.music_output.1).unwrap());
+        // clone the sink thread
+        let sink_clone = self.sink.clone();
+        // the music will be played in a spreat thread and we will check for eg pause or play in
+        // in other thread we cannot do that in the same thread 
+        println!("here 1");
+        let _t1 = thread::spawn(move || {
+            // Load a sound from a file, using a path relative to Cargo.toml
+            println!("get ");
+            let file = BufReader::new(File::open(path).unwrap());
+            // Decode that sound file into a source
+            let source = Decoder::new(file).unwrap();
 
-        // The sound plays in a separate audio thread,
-        // so we need to keep the main thread alive while it's playing.
-        std::thread::sleep(std::time::Duration::from_secs(self.song_length));
+            sink_clone.append(source);
+            sink_clone.sleep_until_end();
+        });
     }
 
     pub fn update_song_length(&mut self, path: &PathBuf) {
