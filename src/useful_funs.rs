@@ -47,7 +47,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<PathBuf> {
             let current_dir = Path::new(path.as_ref().unwrap());
             let join = Path::join(&current_dir, Path::new(&item));
             let ext = Path::new(&item).extension().and_then(OsStr::to_str);
-            if (!join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
+            if (!item.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
                 || (ext.is_some()
                     && (item.extension().unwrap() == "mp3"
                         || item.extension().unwrap() == "mp4"
@@ -70,7 +70,7 @@ pub fn list_audio_files(path: &Option<String>) -> Vec<PathBuf> {
             let join = Path::join(&path, Path::new(&item));
             let ext = Path::new(&item).extension().and_then(OsStr::to_str);
 
-            if (!join.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
+            if (!item.is_dir() && !join.file_name().unwrap().to_str().unwrap().contains('.'))
                 || (ext.is_some()
                     && (item.extension().unwrap() == "mp3"
                         || item.extension().unwrap() == "mp4"
