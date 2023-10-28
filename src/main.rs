@@ -13,7 +13,6 @@ fn main() {
 
     // TODO: get the mpv kinda prinnting working
     loop {
-        println!("here");
         let term = Term::stdout();
         let key = term.read_key().unwrap();
 
@@ -22,19 +21,21 @@ fn main() {
                 term.write_line("You pressed 'q'").unwrap();
                 music_handler.play_pause();
             }
+            // to play the file
             Key::Char('h') => {
-                term.write_line("You pressed 'h' and sab ka chota hai")
-                    .unwrap();
+                println!("pressed h");
                 let files = if args.get(1).is_some() {
                     useful_funs::list_audio_files(&Some(args[1].to_owned()))
                 } else {
                     useful_funs::list_audio_files(&None)
                 };
-                println!("{:?}", &files);
                 for i in files {
                     music_handler.play(i.to_path_buf());
                 }
-                println!("tread worikign");
+            }
+            // skip forward
+            Key::Char('>') => {
+                todo!();
             }
             _ => {
                 term.write_line("You pressed an unsupported key").unwrap();

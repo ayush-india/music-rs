@@ -72,11 +72,9 @@ impl MusicHandle {
         // clone the sink thread
         let sink_clone = self.sink.clone();
         // the music will be played in a spreat thread and we will check for eg pause or play in
-        // in other thread we cannot do that in the same thread 
-        println!("here 1");
+        // in other thread we cannot do that in the same thread
         let _t1 = thread::spawn(move || {
             // Load a sound from a file, using a path relative to Cargo.toml
-            println!("get ");
             let file = BufReader::new(File::open(path).unwrap());
             // Decode that sound file into a source
             let source = Decoder::new(file).unwrap();
