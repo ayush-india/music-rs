@@ -97,4 +97,7 @@ impl MusicHandle {
         // update song length, currently playing
         self.song_length = duration.as_secs() as u64;
     }
+    pub fn song_length(&self) -> u64 {
+        self.song_length
+    }
 }

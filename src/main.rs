@@ -3,6 +3,7 @@ pub mod useful_funs;
 
 use console::{Key, Term};
 use std::env;
+use std::time::Duration;
 
 use music_handler::MusicHandle;
 
@@ -30,7 +31,9 @@ fn main() {
                     useful_funs::list_audio_files(&None)
                 };
                 for i in files {
+                    println!("currenlty playing {:?}", &i);
                     music_handler.play(i.to_path_buf());
+                    println!("song leght {}", music_handler.song_length());
                 }
             }
             // skip forward
@@ -43,3 +46,7 @@ fn main() {
         }
     }
 }
+fn name(arg: Vec<PathBuf>) {
+    
+}
+//TODO: get pause working
